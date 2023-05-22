@@ -1,0 +1,120 @@
+openapi: 3.0.3
+info:
+  title: Swagger Minesweeper - OpenAPI 3.0
+  termsOfService: http://swagger.io/terms/
+tags:
+  - name: Minesweeper
+    description: Everything about your Mines
+paths:
+  /game:
+    post:
+      tags:
+        - Minesweeper
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                bombs:
+                  type: integer
+                size:
+                  type: integer
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Game'
+  /game/{id}:
+    get:
+      tags:
+        - Minesweeper
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Game'
+  /game/{id}/play:
+    put:
+      tags:
+        - Minesweeper
+      summary: Step on the field (show what is under selected field)
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                x:
+                  type: integer
+                y:
+                  type: integer
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Game'
+  /game/{id}/flag:
+    put:
+      tags:
+        - Minesweeper
+      summary: Flag field as bomb (Or unflag if field is aleready flaged)
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                x:
+                  type: integer
+                y:
+                  type: integer
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Game'
+
+components:
+  schemas:
+    Game:
+      required:
+        - id
+        - fields
+        - status
+        - size
+        - flags
+      type: object
+      properties:
+        id:
+          type: string
+          example: "2033d7a8-3c14-4284-a420-8896a58c1414"
+        size:
+          type: integer
+          example: 15
+        status:
+          type: string
+          example: "running"
+          description: Can be running, fail or finish
+        flags:
+          type: array
+          items:
+            type: string
+          example: ["0;0", "12;12", "14;14"]
+        fields:
+          type: object
+          properties:
+            key:
+              type: object
+              properties:
+                type:
+                  type: string
+                  example: "bomb"
+                  description: bomb or number
+                value:
+                  type: number
+                  example: 5
